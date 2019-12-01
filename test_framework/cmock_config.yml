@@ -1,0 +1,5 @@
+:cmock:
+    :strippables: ["__STATIC_INLINE"]
+    :mock_prefix: "mock_"
+    :plugins: [ignore, callback]
+    :when_ptr: :compare
