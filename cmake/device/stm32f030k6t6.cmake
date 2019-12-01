@@ -1,0 +1,11 @@
+set(STARTUP_FILE startup_stm32f030x6.S)
+
+set(MCU_SERIES "STM32_SERIES_F0")
+set(MCU_TYPE   "STM32F030x6")
+set(MCU_CPU    "cortex-m0")
+
+set(FLASH_BASE 0x08000000)
+set(FLASH_SIZE 0x8000)
+
+set(RAM_BASE 0x20000000)
+set(RAM_SIZE 0x1000)
