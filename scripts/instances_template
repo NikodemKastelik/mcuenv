@@ -1,0 +1,39 @@
+#ifndef _HAL_INSTANCES_H_
+#define _HAL_INSTANCES_H_
+
+#include <hal_common.h>
+
+#define HAL_RCC_BUS_BITPOS  28
+
+#define HAL_RCC_PERIPH_BITPOS_MSK 0x0000001F
+
+{%- for define, buses, symbols_and_masks in mcus %}
+{% if loop.first %}
+#if defined({{define}})
+{% else %}
+#elif defined({{define}})
+{% endif -%}
+
+{%- for bus_symbol in buses %}
+{%- if bus_symbol|length == "HAL_RCC_BUS_AxBx"|length %}
+#define {{bus_symbol}}  {{ loop.index0 }}
+{%- else %}
+#define {{bus_symbol}}   {{ loop.index0 }}
+{%- endif %}
+{%- endfor %}
+
+typedef enum
+{
+{%- for symbol, mask_periph, mask_bus in symbols_and_masks %}
+    {{symbol.ljust(20)}} = ({{mask_bus}} << HAL_RCC_BUS_BITPOS) | {{mask_periph}},
+{%- endfor %}
+} hal_rcc_periph_t;
+
+{%- endfor %}
+
+#else
+#error "No target MCU specified."
+#endif
+
+#endif // _HAL_INSTANCES_H_
+
