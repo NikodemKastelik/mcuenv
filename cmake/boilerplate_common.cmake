@@ -2,14 +2,16 @@
 # Macro for setting common paths
 #
 macro(set_paths)
-    set(CMAKE_PATH    ${CMAKE_CURRENT_LIST_DIR})
-    set(MCUENV_PATH   ${CMAKE_CURRENT_LIST_DIR}/..)
-    set(UNITY_PATH    ${MCUENV_PATH}/test_framework/unity)
-    set(CMOCK_PATH    ${MCUENV_PATH}/test_framework/cmock)
-    set(STARTUP_PATH  ${MCUENV_PATH}/startup)
-    set(CMSIS_PATH    ${MCUENV_PATH}/cmsis)
-    set(STM32DRV_PATH ${MCUENV_PATH}/../stm32drv)
-    set(MCULIB_PATH   ${MCUENV_PATH}/../mculib)
+    set(CMAKE_PATH         ${CMAKE_CURRENT_LIST_DIR})
+    set(MCUENV_PATH        ${CMAKE_CURRENT_LIST_DIR}/..)
+    set(UNITY_PATH         ${MCUENV_PATH}/test_framework/unity)
+    set(CMOCK_PATH         ${MCUENV_PATH}/test_framework/cmock)
+    set(STARTUP_PATH       ${MCUENV_PATH}/startup)
+    set(CMSIS_PATH         ${MCUENV_PATH}/cmsis)
+    set(CMSIS_MOCK_PATH    ${MCUENV_PATH}/test_framework/cmsis_mock)
+    set(STM32DRV_PATH      ${MCUENV_PATH}/../stm32drv)
+    set(MCULIB_PATH        ${MCUENV_PATH}/../mculib)
+    set(STM32DRV-TEST_PATH ${MCUENV_PATH}/../stm32drv-test)
 endmacro()
 
 ##
@@ -27,6 +29,23 @@ function(add_unity EXECUTABLE_NAME)
     )
 
     target_link_libraries(${EXECUTABLE_NAME} unity)
+endfunction()
+
+##
+# CMock library setup
+#
+function(add_cmock EXECUTABLE_NAME)
+    add_library(cmock STATIC)
+
+    target_sources(cmock PRIVATE
+        ${CMOCK_PATH}/src/cmock.c
+    )
+
+    target_include_directories(cmock PUBLIC
+        ${CMOCK_PATH}/src
+    )
+
+    target_link_libraries(${EXECUTABLE_NAME} cmock)
 endfunction()
 
 ##
@@ -85,6 +104,49 @@ function(add_cmsis EXECUTABLE_NAME)
     )
 
     target_link_libraries(${EXECUTABLE_NAME} cmsis)
+endfunction()
+
+##
+# cmsis mock library setup
+#
+function(add_cmsis_mock EXECUTABLE_NAME)
+    add_library(cmsis_mock INTERFACE)
+
+    target_include_directories(cmsis_mock INTERFACE
+        ${CMSIS_MOCK_PATH}
+        ${CMSIS_PATH}/device
+    )
+
+    target_link_libraries(${EXECUTABLE_NAME} cmsis_mock)
+endfunction()
+
+##
+# stm32drv mock setup
+#
+function(add_stm32drv_mock EXECUTABLE_NAME)
+    file(GLOB MOCK_SOURCES ${STM32DRV-TEST_PATH}/mocks/*.c)
+
+    add_library(stm32drv_mock STATIC)
+
+    target_sources(stm32drv_mock PRIVATE
+        ${MOCK_SOURCES}
+    )
+
+    target_include_directories(stm32drv_mock
+        PUBLIC
+            ${STM32DRV-TEST_PATH}/mocks
+        PRIVATE
+            ${STM32DRV_PATH}/hal
+    )
+
+    target_compile_definitions(stm32drv_mock PRIVATE
+        ${MCU_SERIES}
+        ${MCU_TYPE}
+        "__MOCK_HAL"
+        "__STATIC_INLINE="
+    )
+
+    target_link_libraries(${EXECUTABLE_NAME} stm32drv_mock)
 endfunction()
 
 ##
