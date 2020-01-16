@@ -62,7 +62,7 @@ target_link_options(${EXECUTABLE_NAME} PRIVATE ${LINKER_FLAGS})
 ##
 # Add stm32drv library.
 #
-add_stm32drv(${EXECUTABLE_NAME})
+add_stm32drv(${EXECUTABLE_NAME} "${STM32DRV_CONFIG_DIR}")
 
 ##
 # Add CMSIS library to the stm32drv library
