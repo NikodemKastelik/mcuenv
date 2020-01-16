@@ -49,9 +49,23 @@ function(add_cmock EXECUTABLE_NAME)
 endfunction()
 
 ##
+# Function for verifying provided path to stm32drv configuration file
+#
+function(stm32drv_config_dir_verify STM32DRV_CONFIG_DIR)
+    if("${STM32DRV_CONFIG_DIR}" STREQUAL "")
+        message(FATAL_ERROR "\nDirectory of \"stm32drv_config.h\" file "
+                            "was not specified.\n"
+                            "Specify the directory by setting "
+                            "the STM32DRV_CONFIG_DIR variable.\n")
+    endif()
+endfunction()
+
+##
 # stm32drv library setup
 #
-function(add_stm32drv EXECUTABLE_NAME)
+function(add_stm32drv EXECUTABLE_NAME STM32DRV_CONFIG_DIR)
+    stm32drv_config_dir_verify("${STM32DRV_CONFIG_DIR}")
+
     file(GLOB LIB_SOURCES ${STM32DRV_PATH}/drv/src/*.c)
 
     add_library(stm32drv STATIC)
@@ -63,6 +77,7 @@ function(add_stm32drv EXECUTABLE_NAME)
     target_include_directories(stm32drv PUBLIC
         ${STM32DRV_PATH}/hal
         ${STM32DRV_PATH}/drv/inc
+        ${STM32DRV_CONFIG_DIR}
     )
 
     target_compile_definitions(stm32drv PRIVATE
@@ -123,7 +138,9 @@ endfunction()
 ##
 # stm32drv mock setup
 #
-function(add_stm32drv_mock EXECUTABLE_NAME)
+function(add_stm32drv_mock EXECUTABLE_NAME STM32DRV_CONFIG_DIR)
+    stm32drv_config_dir_verify("${STM32DRV_CONFIG_DIR}")
+
     file(GLOB MOCK_SOURCES ${STM32DRV-TEST_PATH}/mocks/*.c)
 
     add_library(stm32drv_mock STATIC)
@@ -135,6 +152,7 @@ function(add_stm32drv_mock EXECUTABLE_NAME)
     target_include_directories(stm32drv_mock
         PUBLIC
             ${STM32DRV-TEST_PATH}/mocks
+            ${STM32DRV_CONFIG_DIR}
         PRIVATE
             ${STM32DRV_PATH}/hal
     )
