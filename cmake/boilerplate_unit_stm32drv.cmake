@@ -38,6 +38,8 @@ target_include_directories(app PRIVATE
 target_compile_definitions(app PRIVATE ${C_DEFINES})
 target_compile_options(app PUBLIC ${C_FLAGS})
 
+add_unity_test_runner(app)
+
 add_stm32drv_mock(app "${STM32DRV_CONFIG_DIR}")
 
 add_cmsis_mock(stm32drv_mock)

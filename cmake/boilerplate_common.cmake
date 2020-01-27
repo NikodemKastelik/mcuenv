@@ -6,6 +6,7 @@ macro(set_paths)
     set(MCUENV_PATH        ${CMAKE_CURRENT_LIST_DIR}/..)
     set(UNITY_PATH         ${MCUENV_PATH}/test_framework/unity)
     set(CMOCK_PATH         ${MCUENV_PATH}/test_framework/cmock)
+    set(CMOCK_CONFIG_PATH  ${MCUENV_PATH}/test_framework/cmock_config.yml)
     set(STARTUP_PATH       ${MCUENV_PATH}/startup)
     set(CMSIS_PATH         ${MCUENV_PATH}/cmsis)
     set(CMSIS_MOCK_PATH    ${MCUENV_PATH}/test_framework/cmsis_mock)
@@ -187,4 +188,23 @@ function(add_hex EXECUTABLE_NAME)
         COMMENT "Generate hex..."
     )
     add_dependencies(generate-hex ${EXECUTABLE_NAME})
+endfunction()
+
+##
+# Unity test runner generate
+#
+function(add_unity_test_runner EXECUTABLE_NAME)
+    set_source_files_properties(test_runner.c PROPERTIES GENERATED true)
+    target_sources(app PRIVATE test_runner.c)
+
+    add_custom_command (
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test_cases.c
+        OUTPUT  test_runner.c
+        COMMAND ruby
+                ${UNITY_PATH}/auto/generate_test_runner.rb
+                ${CMOCK_CONFIG_PATH}
+                ${CMAKE_CURRENT_SOURCE_DIR}/test_cases.c
+                test_runner.c
+        COMMENT "Generate test runner..."
+    )
 endfunction()
