@@ -28,6 +28,8 @@ function(add_unity EXECUTABLE_NAME)
         ${UNITY_PATH}/src
     )
 
+    target_compile_options(unity PRIVATE ${C_FLAGS})
+
     target_link_libraries(${EXECUTABLE_NAME} unity)
 endfunction()
 
@@ -44,6 +46,8 @@ function(add_cmock EXECUTABLE_NAME)
     target_include_directories(cmock PUBLIC
         ${CMOCK_PATH}/src
     )
+
+    target_compile_options(cmock PRIVATE ${C_FLAGS})
 
     target_link_libraries(${EXECUTABLE_NAME} cmock)
 endfunction()
@@ -85,6 +89,8 @@ function(add_stm32drv EXECUTABLE_NAME STM32DRV_CONFIG_DIR)
         ${MCU_TYPE}
     )
 
+    target_compile_options(stm32drv PRIVATE ${C_FLAGS})
+
     target_link_libraries(${EXECUTABLE_NAME} stm32drv)
 endfunction()
 
@@ -103,6 +109,8 @@ function(add_mculib EXECUTABLE_NAME)
     target_include_directories(mculib PUBLIC
         ${MCULIB_PATH}/inc
     )
+
+    target_compile_options(mculib PRIVATE ${C_FLAGS})
 
     target_link_libraries(${EXECUTABLE_NAME} mculib)
 endfunction()
@@ -163,6 +171,8 @@ function(add_stm32drv_mock EXECUTABLE_NAME STM32DRV_CONFIG_DIR)
         "__MOCK_HAL"
         "__STATIC_INLINE="
     )
+
+    target_compile_options(stm32drv_mock PRIVATE ${C_FLAGS})
 
     target_link_libraries(${EXECUTABLE_NAME} stm32drv_mock)
 endfunction()
