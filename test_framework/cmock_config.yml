@@ -3,3 +3,4 @@
     :mock_prefix: "mock_"
     :plugins: [ignore, callback]
     :when_ptr: :compare
+    :enforce_strict_ordering: true
