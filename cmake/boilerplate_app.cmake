@@ -32,6 +32,7 @@ list(APPEND C_FLAGS "-mcpu=${MCU_CPU}")
 list(APPEND C_FLAGS "-O3")
 list(APPEND C_FLAGS "-ffunction-sections")
 list(APPEND C_FLAGS "-fdata-sections")
+list(APPEND C_FLAGS "-fomit-frame-pointer")
 
 ##
 # Prepare linker flags
@@ -39,6 +40,7 @@ list(APPEND C_FLAGS "-fdata-sections")
 list(APPEND LINKER_FLAGS "-nostartfiles")
 list(APPEND LINKER_FLAGS "-Tlinker_script.ld")
 list(APPEND LINKER_FLAGS "--specs=nano.specs")
+list(APPEND LINKER_FLAGS "-Wl,--gc-sections")
 
 ##
 # Create output target
