@@ -73,7 +73,7 @@ function(add_stm32drv EXECUTABLE_NAME STM32DRV_CONFIG_DIR)
 
     file(GLOB LIB_SOURCES ${STM32DRV_PATH}/drv/src/*.c)
 
-    add_library(stm32drv STATIC)
+    add_library(stm32drv OBJECT)
 
     target_sources(stm32drv PRIVATE
         ${LIB_SOURCES}
