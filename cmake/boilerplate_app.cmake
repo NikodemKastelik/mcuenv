@@ -30,7 +30,9 @@ list(APPEND C_DEFINES ${MCU_TYPE})
 # Prepare compiler flags
 #
 list(APPEND C_FLAGS "-mcpu=${MCU_CPU}")
+list(APPEND C_FLAGS "-mthumb")
 list(APPEND C_FLAGS "-O3")
+list(APPEND C_FLAGS "-g")
 list(APPEND C_FLAGS "-ffunction-sections")
 list(APPEND C_FLAGS "-fdata-sections")
 list(APPEND C_FLAGS "-fomit-frame-pointer")
@@ -38,6 +40,8 @@ list(APPEND C_FLAGS "-fomit-frame-pointer")
 ##
 # Prepare linker flags
 #
+list(APPEND LINKER_FLAGS "-mcpu=${MCU_CPU}")
+list(APPEND LINKER_FLAGS "-mthumb")
 list(APPEND LINKER_FLAGS "-nostartfiles")
 list(APPEND LINKER_FLAGS "-Tlinker_script.ld")
 list(APPEND LINKER_FLAGS "--specs=nano.specs")
